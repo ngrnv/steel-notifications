@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "projects": {
+    "notifications-fe": "apps/notifications-fe",
+    "notifications-fe-e2e": "apps/notifications-fe-e2e"
+  }
+}

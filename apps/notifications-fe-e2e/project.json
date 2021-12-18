@@ -1,0 +1,28 @@
+{
+  "root": "apps/notifications-fe-e2e",
+  "sourceRoot": "apps/notifications-fe-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/notifications-fe-e2e/cypress.json",
+        "devServerTarget": "notifications-fe:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "notifications-fe:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/notifications-fe-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["notifications-fe"]
+}
