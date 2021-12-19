@@ -1,9 +1,7 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import * as express from 'express';
+import express from 'express';
+import { FileEventsSource } from './app/FileEventsSource';
+import { FileEventReceiver } from './app/FileEventReceiver';
+import { Mongo } from './app/Mongo';
 
 const app = express();
 
@@ -16,3 +14,6 @@ const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
 server.on('error', console.error);
+
+Mongo.connect();
+app.use('/notifications', FileEventReceiver.getInstance(new FileEventsSource().start()));

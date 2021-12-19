@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  mongodb:
+    image: mongo
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
+  mailSlurper:
+    image: marcopas/docker-mailslurper
+    container_name: "mailslurper"
+    ports:
+      - "2500:2500"
+      - "8080:8080"
+      - "8085:8085"
