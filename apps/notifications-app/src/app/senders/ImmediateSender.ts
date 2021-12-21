@@ -1,8 +1,9 @@
 import { Sender } from './Sender';
-import { EmailSendResult, IFileEvent, Periodicity } from '../models';
-import { SubscribersService } from '../SubscribersService';
-import { EmailService } from '../EmailService';
+import { EmailSendResult, IFileEvent, Periodicity, NotificationsStatus } from '../models';
+import { SubscribersService } from '../services/SubscribersService';
+import { EmailService } from '../services/EmailService';
 import promiseRetry from 'promise-retry'
+import { NotificationsService } from '../services/NotificationsService';
 
 export class ImmediateSender extends Sender {
   constructor() {
@@ -13,22 +14,31 @@ export class ImmediateSender extends Sender {
     const subscribers = await SubscribersService.getSubscribersByPeriodicity(this.periodicity)
 
     try {
+      await NotificationsService.updateEventStatus(
+        event._id, NotificationsStatus.Sending, this.getSenderKey()
+      );
       await promiseRetry(
         { retries: 3, factor: 2 },
         async (retry, attempt) => {
-          console.log(`[ImmediateSender.send] attempt for ${event._id}`, attempt)
+          console.log(`Sender: ${this.getSenderKey()}: attempt ${attempt} for ${event._id}`);
           const sendResult: EmailSendResult = await EmailService.getInstance().sendEmails(
             subscribers.map(s => s.email),
             event.payload,
+            `Notifications from Steel Notificator: ${this.periodicity}: ${event.payload}`
           );
-          if (sendResult.accepted.length) {
+          if (sendResult.rejected.length) {
             return retry(sendResult.rejected)
           }
+          await NotificationsService.updateEventStatus(
+            event._id, NotificationsStatus.Sent, this.getSenderKey()
+          );
           return sendResult;
-        })
+        });
     } catch (err) {
       console.error(`Error sending notification ${event._id}`);
-      throw err;
+      await NotificationsService.updateEventStatus(
+        event._id, NotificationsStatus.Failed, this.getSenderKey()
+      );
     }
   }
 }

@@ -1,5 +1,5 @@
-import { concatMap, delay, Observable, of, range, tap } from 'rxjs';
-import { EventStatus, EventType, IFileEvent } from './models';
+import { concatMap, delay, Observable, of, range } from 'rxjs';
+import { EventType, IFileEvent } from './models';
 import { ObjectId } from 'mongodb';
 
 export class FileEventsSource {
@@ -16,13 +16,11 @@ export class FileEventsSource {
           payload: `File ${i}`,
           type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
           timestamp: new Date(),
-          status: EventStatus.Pending,
         } as IFileEvent)
           .pipe(
             delay(1e3 + (Math.random() * 1e4)),
           )
-      ),
-      // tap(e => console.log(`${Date.now()}: ${JSON.stringify(e)}`))
+      )
     );
   }
 }

@@ -6,13 +6,6 @@ export enum EventType {
   FileRemoved = 'FileRemoved',
 }
 
-export enum EventStatus {
-  Pending = 'pending',
-  Sending = 'sending',
-  Sent = 'sent',
-  Error = 'error'
-}
-
 export enum Periodicity {
   Immediate = 'immediate',
   FiveMin = '5min',
@@ -26,8 +19,7 @@ export interface IFileEvent {
   type: EventType;
   payload: string;
   timestamp: Date;
-  status: EventStatus;
-  statuses: {[senderKey: string]: EventStatus}
+  statuses: {[senderKey: string]: NotificationsStatus}
 }
 
 export interface ISubscription {
@@ -40,4 +32,20 @@ export interface EmailSendResult {
   rejected: string[];
   response: string;
   messageId: string;
+}
+
+export enum NotificationsStatus {
+  Pending = 'pending',
+  Sending = 'sending',
+  Sent = 'sent',
+  PartiallySent = 'partiallySent',
+  Failed = 'failed',
+}
+
+export interface NotificationsJob {
+  _id: ObjectId;
+  failedSubscribers: string[];
+  senderKey: string;
+  status: NotificationsStatus;
+  events: ObjectId[];
 }

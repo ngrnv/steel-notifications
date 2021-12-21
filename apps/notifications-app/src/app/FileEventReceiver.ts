@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { Observable } from 'rxjs';
-import { EventStatus, IFileEvent } from './models';
-import { NotificationsService } from './NotificationsService';
+import { IFileEvent } from './models';
+import { NotificationsService } from './services/NotificationsService';
 import { ImmediateSender } from './senders/ImmediateSender';
+import { FiveMinuteSender } from './senders/FiveMinuteSender';
+import { TenMinuteSender } from './senders/TenMinuteSender';
 
 export class FileEventReceiver {
   private static instance: FileEventReceiver;
@@ -14,6 +16,8 @@ export class FileEventReceiver {
     if (!FileEventReceiver.instance) {
       FileEventReceiver.instance = new FileEventReceiver(events$);
     }
+    new FiveMinuteSender().start();
+    new TenMinuteSender().start();
     return FileEventReceiver.router;
   }
 
@@ -21,22 +25,15 @@ export class FileEventReceiver {
   private constructor(events$: Observable<IFileEvent>) {
     events$.subscribe(this.handleEvents);
     const router = Router();
-    router.get('/test', (req, res) => {
+    router.get('/health', (req, res) => {
       res.send('ok')
     });
     FileEventReceiver.router = router;
   }
 
   private handleEvents = async (e: IFileEvent) => {
-    console.log(`Event ${Date.now()}: ${JSON.stringify(e)}`)
     await NotificationsService.persistEvent(e);
-    try {
-      await this.immediateSender.send(e);
-    } catch (err) {
-      await NotificationsService.updateEventStatus(
-        e._id, EventStatus.Error, this.immediateSender.getSenderKey()
-      );
-    }
+    await this.immediateSender.send(e);
   }
 
 }
