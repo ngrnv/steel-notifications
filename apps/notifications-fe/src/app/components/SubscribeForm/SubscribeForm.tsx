@@ -45,7 +45,7 @@ const SubscribeForm: React.FC<FormProps & FormikProps<FormModel>> = () => {
           >
             {/* Intervals could be loaded from backend */}
             <MenuItem value="immediate">Immediate</MenuItem>
-            <MenuItem value="5min2">5 minutes</MenuItem>
+            <MenuItem value="5min">5 minutes</MenuItem>
             <MenuItem value="10min">10 minutes</MenuItem>
           </Field>
         </FieldGroup>
@@ -64,7 +64,7 @@ export default withFormik({
   } as FormModel),
   handleSubmit: async (values: FormModel, bag: FormikBag<FormProps, FormModel>) => {
     try {
-      await axios.post("http://localhost:3333/subscriptions", values);
+      await axios.post("http://localhost:3333/api/subscriptions", values);
       bag.props.onSubscriptionAdded();
     } catch (err: any) {
       bag.props.onSubscriptionAdded(err.response.data);

@@ -10,7 +10,8 @@ export class Mongo {
   private static _db;
 
   public static connect() {
-    MongoClient.connect('mongodb://localhost:27017')
+    console.log('Connecting to MongoDB by url', `mongodb://${process.env.MONGO_URL || 'localhost'}:27017`);
+    MongoClient.connect(`mongodb://${process.env.MONGO_URL || 'localhost'}:27017`)
       .then((client) => {
         console.log('Connected to MongoDB');
         Mongo.client = client;

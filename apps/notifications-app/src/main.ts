@@ -19,5 +19,5 @@ const server = app.listen(port, () => {
 server.on('error', console.error);
 
 Mongo.connect();
-app.use('/notifications', FileEventReceiver.getInstance(new FileEventsSource().start()));
-app.use('/subscriptions', new SubscriptionsController().routes);
+app.use('/api/notifications', FileEventReceiver.getInstance(new FileEventsSource().start()));
+app.use('/api/subscriptions', new SubscriptionsController().routes);

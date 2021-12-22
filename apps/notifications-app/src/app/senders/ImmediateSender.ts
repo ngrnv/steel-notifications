@@ -11,7 +11,10 @@ export class ImmediateSender extends Sender {
   }
 
   async send(event: IFileEvent) {
-    const subscribers = await SubscribersService.getSubscribersByPeriodicity(this.periodicity)
+    const subscribers = await SubscribersService.getSubscribersByPeriodicity(this.periodicity);
+    if (!subscribers.length) {
+      return;
+    }
 
     try {
       await NotificationsService.updateEventStatus(

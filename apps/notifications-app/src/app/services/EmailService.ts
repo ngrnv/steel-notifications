@@ -8,8 +8,9 @@ export class EmailService {
   private transporter;
 
   private constructor() {
+    console.log("SMTP url", process.env.SMTP_URL || "localhost");
     this.transporter = nodemailer.createTransport({
-      host: 'localhost',
+      host: process.env.SMTP_URL || 'localhost',
       port: 2500,
       secure: false,
     });

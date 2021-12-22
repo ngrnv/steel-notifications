@@ -5,10 +5,42 @@ services:
     container_name: "mongodb"
     ports:
       - "27017:27017"
-  mailSlurper:
+    networks:
+      - app-network
+  mail-slurper:
     image: marcopas/docker-mailslurper
     container_name: "mailslurper"
     ports:
       - "2500:2500"
       - "8080:8080"
       - "8085:8085"
+    networks:
+      - app-network
+  notifications-app:
+    build:
+      context: .
+      dockerfile: ./apps/notifications-app/Dockerfile
+    container_name: "notifications-app"
+    ports:
+      - "3333:3333"
+    depends_on:
+      - mongodb
+      - mail-slurper
+    networks:
+      - app-network
+  notifications-fe:
+    build:
+      context: .
+      dockerfile: ./apps/notifications-fe/Dockerfile
+    container_name: "notifications-fe"
+    ports:
+      - "4200:4200"
+    depends_on:
+      - mongodb
+      - mail-slurper
+      - notifications-app
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
