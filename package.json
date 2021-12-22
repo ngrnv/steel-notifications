@@ -8,7 +8,6 @@
     "build:fe": "nx build notifications-fe",
     "build:app": "nx build notifications-app",
     "build": "npm run build:app & npm run build:fe",
-    "test": "nx test"
   },
   "private": true,
   "dependencies": {
