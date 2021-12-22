@@ -1,9 +1,9 @@
-import { Sender } from './Sender';
-import { EmailSendResult, IFileEvent, Periodicity, NotificationsStatus } from '../models';
-import { SubscribersService } from '../services/SubscribersService';
-import { EmailService } from '../services/EmailService';
-import promiseRetry from 'promise-retry'
-import { NotificationsService } from '../services/NotificationsService';
+import { Sender } from "./Sender";
+import { EmailSendResult, IFileEvent, Periodicity, NotificationsStatus } from "../models";
+import { SubscribersService } from "../services/SubscribersService";
+import { EmailService } from "../services/EmailService";
+import promiseRetry from "promise-retry";
+import { NotificationsService } from "../services/NotificationsService";
 
 export class ImmediateSender extends Sender {
   constructor() {
@@ -30,7 +30,7 @@ export class ImmediateSender extends Sender {
             `Notifications from Steel Notificator: ${this.periodicity}: ${event.payload}`
           );
           if (sendResult.rejected.length) {
-            return retry(sendResult.rejected)
+            return retry(sendResult.rejected);
           }
           await NotificationsService.updateEventStatus(
             event._id, NotificationsStatus.Sent, this.getSenderKey()

@@ -1,10 +1,10 @@
-import { Mongo } from '../Mongo';
-import { ObjectId } from 'mongodb';
-import { NotificationsJob, NotificationsStatus } from '../models';
+import { Mongo } from "../Mongo";
+import { ObjectId } from "mongodb";
+import { NotificationsJob, NotificationsStatus } from "../models";
 
 export class NotificationsJobsService {
 
-  private static collectionId = 'notificationsJobs'
+  private static collectionId = "notificationsJobs";
 
   static async createNotificationsSendJob(
     events: ObjectId[], senderKey: string, status?: NotificationsStatus
@@ -16,6 +16,7 @@ export class NotificationsJobsService {
         status: status || NotificationsStatus.Pending,
         senderKey,
         events,
+        timestamp: new Date()
       } as NotificationsJob);
   }
 

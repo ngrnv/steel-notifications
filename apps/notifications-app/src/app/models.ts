@@ -1,15 +1,15 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export enum EventType {
-  FileUploadStarted = 'FileUploadStarted',
-  FileUploadCompleted = 'FileUploadCompleted',
-  FileRemoved = 'FileRemoved',
+  FileUploadStarted = "FileUploadStarted",
+  FileUploadCompleted = "FileUploadCompleted",
+  FileRemoved = "FileRemoved",
 }
 
 export enum Periodicity {
-  Immediate = 'immediate',
-  FiveMin = '5min',
-  TenMin = '10min',
+  Immediate = "immediate",
+  FiveMin = "5min",
+  TenMin = "10min",
 }
 
 export type SenderKey = Periodicity;
@@ -19,7 +19,7 @@ export interface IFileEvent {
   type: EventType;
   payload: string;
   timestamp: Date;
-  statuses: {[senderKey: string]: NotificationsStatus}
+  statuses: { [senderKey: string]: NotificationsStatus };
 }
 
 export interface ISubscription {
@@ -35,11 +35,11 @@ export interface EmailSendResult {
 }
 
 export enum NotificationsStatus {
-  Pending = 'pending',
-  Sending = 'sending',
-  Sent = 'sent',
-  PartiallySent = 'partiallySent',
-  Failed = 'failed',
+  Pending = "pending",
+  Sending = "sending",
+  Sent = "sent",
+  PartiallySent = "partiallySent",
+  Failed = "failed",
 }
 
 export interface NotificationsJob {
@@ -48,4 +48,5 @@ export interface NotificationsJob {
   senderKey: string;
   status: NotificationsStatus;
   events: ObjectId[];
+  timestamp: Date;
 }
